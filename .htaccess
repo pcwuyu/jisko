@@ -1,0 +1,39 @@
+# Jisko htaccess
+
+# Some mod_rewrite stuff
+RewriteEngine On
+
+#If you're having trouble with the message "No input specified.", uncomment the next line
+#AddHandler application/x-httpd-php5 .php
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule (.+) index.php/$1 [L]
+
+# HotLinking (if you want!)
+#RewriteCond %{HTTP_REFERER} !^$
+#RewriteCond %{HTTP_REFERER} !yourdomain.com [NC]
+#RewriteCond %{HTTP_REFERER} !images.google. [NC]
+#RewriteRule .*.(jpg|gif|bmp|png)$ - [F]
+
+# Adding some security to files/dirs
+IndexIgnore *
+RewriteRule ^(.*/)?\.svn/ - [F,L]
+<Files ~ "\.(conf)$">
+  order allow,deny
+  deny from all
+</Files>
+<Files ~ "\.(log)$">
+  order allow,deny
+  deny from all
+</Files>
+
+# Expirations
+FileETag MTime Size
+
+<ifmodule mod_expires.c>
+  <filesmatch "\.(jpg|jpeg|gif|png|css|js)$">
+       ExpiresActive on
+       ExpiresDefault "access plus 1 year"
+   </filesmatch>
+</ifmodule>
